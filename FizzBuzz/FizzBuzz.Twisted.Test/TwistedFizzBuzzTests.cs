@@ -106,7 +106,7 @@ namespace FizzBuzz.Twisted.Test
         public void Solve_CalledWithJsonTokenAndUpperAndLowerBound_ReturnsCorrectOutputForGivenToken()
         {
             // Arrange
-            var tokenJson = "{\"multiple\":5,\"word\":\"collection\"}";
+            var tokenJson = "[{\"multiple\":5,\"word\":\"collection\"}]";
 
             // Act
             var result = twisted.Solve(tokenJson, 1, 16);
@@ -118,6 +118,24 @@ namespace FizzBuzz.Twisted.Test
             Assert.That(resultLines[9], Is.EqualTo("collection"));
             Assert.That(resultLines[11], Is.EqualTo("12"));
             Assert.That(resultLines[14], Is.EqualTo("collection"));
+        }
+
+        [Test]
+        public void Solve_CalledWithMultipleJsonTokenAndUpperAndLowerBound_ReturnsCorrectOutputForGivenToken()
+        {
+            // Arrange
+            var tokenJson = "[{\"multiple\":5,\"word\":\"collection\"},{\"multiple\":3,\"word\":\"target\"}]";
+
+            // Act
+            var result = twisted.Solve(tokenJson, 1, 16);
+            var resultLines = result.Split("\r\n");
+
+            // Assert
+            Assert.That(resultLines[0], Is.EqualTo("1"));
+            Assert.That(resultLines[4], Is.EqualTo("collection"));
+            Assert.That(resultLines[8], Is.EqualTo("target"));
+            Assert.That(resultLines[12], Is.EqualTo("13"));
+            Assert.That(resultLines[14], Is.EqualTo("collectiontarget"));
         }
     }
 }

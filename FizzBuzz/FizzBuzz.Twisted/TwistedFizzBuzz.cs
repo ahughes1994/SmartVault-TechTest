@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Text;
 
 namespace FizzBuzz.Twisted
@@ -110,18 +111,27 @@ namespace FizzBuzz.Twisted
         /// <returns>A newline separated string of custom 'FizzBuzz' results</returns>
         public string Solve(string tokenJson, int lowerBound, int upperBound)
         {
-            var token = JsonConvert.DeserializeAnonymousType(tokenJson, new { Multiple = 0, Word = "" });
+            var tokens = JsonConvert.DeserializeObject<List<ApiToken>>(tokenJson);
             var strBuilder = new StringBuilder(Math.Abs(upperBound - lowerBound));
 
-            for (var x = lowerBound; x < upperBound; x++)
+            for (var i = lowerBound; i < upperBound; i++)
             {
-                if (x % token?.Multiple == 0)
-                    strBuilder.AppendLine(token?.Word);
+                var res = tokens?.Where(x => i % x.Multiple == 0);
+
+                if (res.Count() == 0)
+                    strBuilder.AppendLine(i.ToString());
                 else
-                    strBuilder.AppendLine(x.ToString());
+                    strBuilder.AppendLine(string.Join(string.Empty, res.Select(x => x.Word)));
             }
 
             return strBuilder.ToString();
+        }
+
+        public class ApiToken
+        {
+            public int Multiple { get; set; } = 0;
+
+            public string Word { get; set; } = string.Empty;
         }
     }
 }
